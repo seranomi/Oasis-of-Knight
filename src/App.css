@@ -56,6 +56,7 @@ body {
   left: 0.35em;
   font-size: clamp(8px, 2.2vmin, 100px);
   font-weight: 600;
+  z-index: 3;
 }
 
 .cell-file {
@@ -64,4 +65,48 @@ body {
   bottom: 0.25em;
   font-size: clamp(8px, 2.2vmin, 100px);
   font-weight: 600;
+  z-index: 3;
+}
+
+.piece {
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.move-highlight {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 28%;
+  height: 28%;
+  border-radius: 50%;
+  background-color: rgba(20, 20, 20, 0.28);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.clickable {
+  cursor: pointer;
+}
+.clickable:hover .move-highlight {
+  transform: translate(-50%, -50%) scale(1.2);
+}
+.move-highlight {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 28%;
+  height: 28%;
+  border-radius: 50%;
+  background-color: rgba(20, 20, 20, 0.28);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  transition: transform 0.15s ease;
 }
