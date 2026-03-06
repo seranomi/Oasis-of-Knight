@@ -33,8 +33,14 @@ function isInsideBoard(position: Position, boardSize: number): boolean {
   );
 }
 
-function playMoveBeep() {
-  const audioContext = new AudioContext();
+const audioContext = new window.AudioContext();
+
+async function playMoveBeep() {
+  if (audioContext.state === "suspended") {
+    await audioContext.resume();
+  }
+
+  const now = audioContext.currentTime;
   const oscillator = audioContext.createOscillator();
   const gainNode = audioContext.createGain();
 
@@ -42,16 +48,13 @@ function playMoveBeep() {
   gainNode.connect(audioContext.destination);
 
   oscillator.type = "triangle";
-  oscillator.frequency.value = 520;
+  oscillator.frequency.setValueAtTime(520, now);
 
-  gainNode.gain.setValueAtTime(0.08, audioContext.currentTime);
-  gainNode.gain.exponentialRampToValueAtTime(
-    0.001,
-    audioContext.currentTime + 0.12
-  );
+  gainNode.gain.setValueAtTime(0.08, now);
+  gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
 
-  oscillator.start();
-  oscillator.stop(audioContext.currentTime + 0.12);
+  oscillator.start(now);
+  oscillator.stop(now + 0.08);
 }
 
 function App() {
@@ -77,17 +80,16 @@ function App() {
     }))
     .filter((position) => isInsideBoard(position, BOARD_SIZE));
 
-  function handleCellClick(cell: Position) {
+  async function handleCellClick(cell: Position) {
     const isValidMove = validMoves.some(
       (move) => move.row === cell.row && move.col === cell.col
     );
 
     if (isValidMove) {
-      playMoveBeep();
+      await playMoveBeep();
       setKnightPosition(cell);
     }
   }
-  
 
   return (
     <div className="app">
